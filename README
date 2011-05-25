@@ -27,5 +27,8 @@ REQUIREMENTS
 
 Bash is the only software requirement.
 
-Once the unique task id is in the file, it should not be removed,
+Once the unique task id is in the file, it should:
+ 1. Not be removed
+ 2. Stay at the begining of the line
+
 otherwise the generator may produce a non-unique tasks id.

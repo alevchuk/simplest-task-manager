@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Fail on error
+set -e
+
+task_file=/srv/projects/biocluster-admin/AOL-TASKS
+lock_file=${task_file}.lock
+
+# Check if the lock file is valid
+if [ ! -e $lock_file ]; then
+  echo "ERROR: $lock_file does not exists"
+  echo "Please create that file and make it writable by the Admin group"
+  exit 1
+fi
+
+# Check if the system is locked
+if [ ! -e $lock_file ]; then
+  echo "ERROR: $lock_file is not empty"
+  echo "Someone is currently editing AOL-TASKS?"
+  exit 1
+fi
+
+# Figure out the next [task id]
+task_id=`awk '/^ *aol[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
+int_id=`echo $task_id | awk -Fl '{print $2}'`
+if [ "${int_id}" -gt 0 ]; then
+  let int_id++
+  task_id="aol$(printf "%03d" $int_id)"
+else
+  task_id="aol001"
+fi
+
+# Put the [task id] and date on the first line of the lockfile
+# follwed by the contents of the task file
+echo "$task_id (start: $(date +'%a %d-%m-%Y'))" > $lock_file
+cat $task_file >> $lock_file
+
+# Open the text editor on the temporary file
+vim $lock_file
+
+# Copy the temporary file over the main oprational file
+cp $lock_file $task_file
+
+# Un-lock
+cat /dev/null > $lock_file

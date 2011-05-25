@@ -1,0 +1,31 @@
+A very simple human task management.
+
+"aol" are my name initials,
+so when my boss or I what to assign a new task for me we just run:
+  aol
+
+This creates a new unique task id (e.g. aol003) and puts it 
+as the first line in the tasks file with a today's date and
+opens that file in vi.
+
+There is complete freedom on how to format the file.
+
+We plan to move lines (of sets of lines) up and down
+to indicate the task priority.
+
+There will be a section on the bottom of the file where
+closed tasks are placed.
+
+The tasks id are meant to be assisted with emails and made searchable so I
+plan to forward request emails with the new task id to my boss and ask him
+to do then same when giving me new assignments and to move things in the
+tasks file according to priority.
+
+
+REQUIREMENTS
+############
+
+Bash is the only software requirement.
+
+Once the unique task id is in the file, it should not be removed,
+otherwise the generator may produce a non-unique tasks id.

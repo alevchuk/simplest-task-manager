@@ -24,6 +24,7 @@ fi
 task_id=`awk '/^ *aol[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
 int_id=`echo $task_id | awk -Fl '{print $2}'`
 if [ "${int_id}" -gt 0 ]; then
+  int_id="$(echo $int_id | sed 's/0*//')" # Strip zeroes
   let int_id++
   task_id="aol$(printf "%03d" $int_id)"
 else

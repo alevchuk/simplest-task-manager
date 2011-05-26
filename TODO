@@ -1,0 +1,8 @@
+aol003 (opened: Wed 25-05-2011) CRON checker to email when a changed happens
+aol002 (opened: Wed 25-05-2011) If nothing was added to the first line then
+  don't keep it. The first line is the new taks. I found myself typing "aol"
+  just to check the list. It that case I don't need to add new tasks.
+
+Closed Tasks
+############
+aol002 (opened: Wed 25-05-2011) Publish TODO on GitHub

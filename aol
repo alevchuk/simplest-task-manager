@@ -17,6 +17,9 @@ fi
 if [ -s $lock_file ]; then
   echo "ERROR: $lock_file is not empty"
   echo "Someone is currently editing AOL-TASKS?"
+  echo ""
+  echo "Please check with:"
+  echo "diff /srv/projects/biocluster-admin/AOL-TASKS{,.lock}"
   exit 1
 fi
 
@@ -36,11 +39,28 @@ fi
 echo "$task_id (opened: $(date +'%a %d-%m-%Y'))" > $lock_file
 cat $task_file >> $lock_file
 
+# Make a copy for checking if there were changes
+cat $lock_file > ${lock_file}.unchanged
+
 # Open the text editor on the temporary file
 vim $lock_file
 
-# Copy the temporary file over the main oprational file
-cp $lock_file $task_file
+# Check if anything changed
+set +e
+diff $lock_file ${lock_file}.unchanged > /dev/null
+if [ $? -eq 0 ]; then
+  echo "Nothing changed" > /dev/stderr
+else
+  diff $lock_file $task_file > /dev/null
+  if [ $? -eq 0 ]; then
+    echo "Nothing changed" > /dev/stderr
+  else
+    # Copy the temporary file over the main oprational file
+    cat $lock_file > $task_file
+  fi
+fi
+set -e
 
-# Un-lock
+# Un-lock and Clean-up
 cat /dev/null > $lock_file
+cat /dev/null > ${lock_file}.unchanged

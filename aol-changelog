@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd /srv/projects/biocluster-admin
+export PAGER="less -n --raw-control-chars"; git log -p

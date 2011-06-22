@@ -64,3 +64,11 @@ set -e
 # Un-lock and Clean-up
 cat /dev/null > $lock_file
 cat /dev/null > ${lock_file}.unchanged
+
+
+
+## Git commit
+cd /srv/projects/biocluster-admin
+git add AOL-TASKS
+git commit -m "AOL-TASKS by $USER" > /dev/null
+git gc --auto

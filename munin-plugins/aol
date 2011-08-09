@@ -1,0 +1,26 @@
+#!/usr/bin/ruby
+
+lines = File.open("/srv/projects/AOL-TASKS") {|f| f.readlines}
+
+sections = lines.join.split "\n\n"
+
+MAP = {
+  0 => "Currently Open",
+  1 => "For Successor",
+  2 => "May Need Reopening",
+  3 => "Done"
+}
+
+if ARGV[0] == "config"
+  puts "graph_title Counts of Admin Tasks"
+  puts "graph_category alex"
+  sections.size.times do |i| 
+    label = MAP.include?(i) ? MAP[i] : "section#{i}"
+    puts "section#{i}.label #{label}"
+  end
+else
+  sections.each_with_index do |section, i|
+    c = section.select {|line| line =~ /^aol/}.size
+    puts "section#{i}.value #{c}"
+  end
+end

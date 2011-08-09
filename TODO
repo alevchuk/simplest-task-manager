@@ -1,7 +1,8 @@
-aol003 (opened: Wed 25-05-2011) CRON checker to email when a changed happens
 
 Closed Tasks
 ############
+aol003 (opened: Wed 25-05-2011) CRON checker to email when a changed happens
+  Will not do
 aol002 (opened: Wed 25-05-2011) If nothing was added to the first line then
   don't keep it. The first line is the new task. I found myself typing "aol"
   just to check the list. It that case I don't need to add the new task. So

@@ -19,7 +19,10 @@
 # Fail on error
 set -e
 
-task_file=/srv/projects/biocluster-admin/AOL-TASKS
+task_dir=~/projects/037-thesis-tasks
+task_file_name=AOL-THESIS
+
+task_file=$task_dir/$task_file_name
 lock_file=${task_file}.lock
 
 # Check if the lock file is valid
@@ -42,7 +45,7 @@ fi
 # Figure out the next [task id]
 task_id=`awk '/^ *aol[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
 int_id=`echo $task_id | awk -Fl '{print $2}'`
-if [ "${int_id}" -gt 0 ]; then
+if [[ "${int_id}" =~ ^[0-9]+$ ]] && [[ "${int_id}" -gt 0 ]] ; then
   int_id="$(echo $int_id | sed 's/0*//')" # Strip zeroes
   let int_id++
   task_id="aol$(printf "%03d" $int_id)"
@@ -84,7 +87,7 @@ cat /dev/null > ${lock_file}.unchanged
 
 
 ## Git commit
-cd /srv/projects/biocluster-admin
-git add AOL-TASKS
-git commit -m "AOL-TASKS by $USER" > /dev/null
+cd $task_dir
+git add $task_file_name
+git commit -m "TASKS edit by $USER" > /dev/null
 git gc --auto

@@ -19,40 +19,57 @@
 # Fail on error
 set -e
 
-task_dir=~/projects/037-thesis-tasks
-task_file_name=AOL-THESIS
+task_dir=~/simplest-task-manager/data
+task_seed=$(basename $0) # The name of this scirpt file is very important
 
-task_file=$task_dir/$task_file_name
+task_file=$task_dir/$task_seed
 lock_file=${task_file}.lock
+
+# Check if the task file is valid
+if [ ! -e $task_file ]; then
+  echo "ERROR: $task_file does not exists"
+  echo "Please create that file. Optionally, make it writable by a Unix group."
+  exit 1
+fi
 
 # Check if the lock file is valid
 if [ ! -e $lock_file ]; then
   echo "ERROR: $lock_file does not exists"
-  echo "Please create that file and make it writable by the Admin group"
+  echo "Please create that file. Optionally, make it writable by a Unix group."
   exit 1
 fi
 
 # Check if the system is locked
 if [ -s $lock_file ]; then
   echo "ERROR: $lock_file is not empty"
-  echo "Someone is currently editing AOL-TASKS?"
+  echo "Someone is currently editing $task_file?"
   echo ""
   echo "Please check with:"
-  echo "diff /srv/projects/biocluster-admin/AOL-TASKS{,.lock}"
-  exit 1
+  echo "diff $task_file{,.lock}"
+  echo
+
+  # Confirm fix?
+  while true; do
+    read -p "Do you wish to overwrite $task_file with $lock_file? " yn
+    case $yn in
+        [Yy]* ) cp $task_file{.lock,} && cat /dev/null > $lock_file; break;;
+        [Nn]* ) exit 1;;
+        * ) echo "Please answer yes or no.";;
+    esac
+  done
 fi
 
 # Figure out the next [task id]
-task_id=`awk '/^ *aol[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
+task_id=`awk '/^ *$task_seed[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
 
 # TODO: This awk -Fl hack is ridicules and should be fixed
 int_id=`echo $task_id | awk -Fl '{print $2}'`
 if [[ "${int_id}" =~ ^[0-9]+$ ]] && [[ $((10#$int_id)) -gt 0 ]] ; then
   int_id="$(echo $int_id | sed 's/0*//')" # Strip zeroes
   let int_id++
-  task_id="aol$(printf "%03d" $int_id)"
+  task_id="$task_seed$(printf "%03d" $int_id)"
 else
-  task_id="aol001"
+  task_id="${task_seed}001"
 fi
 
 # Put the [task id] and date on the first line of the lockfile
@@ -90,6 +107,7 @@ cat /dev/null > ${lock_file}.unchanged
 
 ## Git commit
 cd $task_dir
-git add $task_file_name
+git init | grep -v "Reinitialized"
+git add $task_seed
 git commit -m "TASKS edit by $USER" > /dev/null
 git gc --auto

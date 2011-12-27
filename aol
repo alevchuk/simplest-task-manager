@@ -25,17 +25,30 @@ task_seed=$(basename $0) # The name of this scirpt file is very important
 task_file=$task_dir/$task_seed
 lock_file=${task_file}.lock
 
+
+if [ ! -e $task_dir ]; then
+  mkdir $task_dir
+fi
+
+function collab {
+  echo "For collaboration, first make the directory $task_dir sticky and writable by a Unix group."
+}
+
 # Check if the task file is valid
 if [ ! -e $task_file ]; then
   echo "ERROR: $task_file does not exists"
-  echo "Please create that file. Optionally, make it writable by a Unix group."
+  echo "Please create an empty file in the above location."
+  collab
+  echo "So, step 1 of 2: touch $task_file"
   exit 1
 fi
 
 # Check if the lock file is valid
 if [ ! -e $lock_file ]; then
   echo "ERROR: $lock_file does not exists"
-  echo "Please create that file. Optionally, make it writable by a Unix group."
+  echo "Please create an empty file in the above location."
+  collab
+  echo "So, step 2 of 2: touch $lock_file"
   exit 1
 fi
 

@@ -73,10 +73,10 @@ if [ -s $lock_file ]; then
 fi
 
 # Figure out the next [task id]
-task_id=`awk '/^ *$task_seed[0-9]+/ {print $1}' $task_file | sort -n | uniq | tail -1`
+task_id=`awk "/^ *$task_seed[0-9]+/ {print \$1}" $task_file | 
+  sort -n | uniq | tail -1`
 
-# TODO: This awk -Fl hack is ridicules and should be fixed
-int_id=`echo $task_id | awk -Fl '{print $2}'`
+int_id=`echo $task_id | sed "s/$task_seed//" | awk '{print $1}'`
 if [[ "${int_id}" =~ ^[0-9]+$ ]] && [[ $((10#$int_id)) -gt 0 ]] ; then
   int_id="$(echo $int_id | sed 's/0*//')" # Strip zeroes
   let int_id++

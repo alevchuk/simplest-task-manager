@@ -117,10 +117,9 @@ cat /dev/null > $lock_file
 cat /dev/null > ${lock_file}.unchanged
 
 
-
 ## Git commit
 cd $task_dir
-git init | grep -v "Reinitialized"
+git init | grep -v "Reinitialized" || true
 git add $task_seed
 git commit -m "TASKS edit by $USER" > /dev/null
 git gc --auto

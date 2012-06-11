@@ -87,7 +87,9 @@ fi
 
 # Put the [task id] and date on the first line of the lockfile
 # follwed by the contents of the task file
-echo "$task_id (opened: $(date +'%a %d-%m-%Y'))" > $lock_file
+if ! cat $task_file | head -n1 | egrep -q "(opened: .*)$" ; then
+  echo "$task_id (opened: $(date +'%a %d-%m'))" > $lock_file
+fi
 cat $task_file >> $lock_file
 
 # Make a copy for checking if there were changes

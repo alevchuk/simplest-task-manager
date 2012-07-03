@@ -4,28 +4,25 @@ so when my boss or I what to get me a new task, we just run:
 
 This creates a new unique task id (e.g. aol003) and puts it 
 as the first line in the tasks file with a today's date and
-opens that file in vi.
+opens that file in Vim.
 
-There is a lot of freedom on how to format the file.
+There is a lot of freedom on how to format the file. Here is what I do...
+(but it's in a text editor so you can do anything else):
+ * I move lines (or sets of lines) up and down to indicate the task priority.
+ * I have a section on the bottom of the file where closed tasks are placed.
+ * I separate sections by double newlines.
+ * My Munin monitor graphs counts of tasks in different sections.
 
-Move lines (of sets of lines) up and down to indicate the task priority.
-
-A section on the bottom of the file where closed tasks are placed.
-Section are separated by double newlines.
-
-The tasks id are meant to be assisted with emails and made searchable so I
-plan to forward request emails with the new task id to my boss and ask him
-to do then same when giving me new assignments and to move things in the
-tasks file according to priority.
+The tasks ids can be placed in emails and are unique (searchable).
 
 
 Example
 #######
 
-The TODO file has the syntax of simplest-task-manager.
+Please see the TODO file. It has the shape of a simplest-task-manager file.
 
 
 REQUIREMENTS
 ############
 
-Bash is the only software requirement.
+Bash is the only software requirement!
